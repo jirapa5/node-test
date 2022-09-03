@@ -1,0 +1,19 @@
+FROM node:14-alpine3.12
+
+ENV TZ UTC
+ENV NODE_ENV development
+
+WORKDIR /usr/src
+
+COPY . .
+RUN cp .env.local .env && rm .env.*
+RUN apk add --no-cache make gcc g++ python3
+RUN ["npm", "install"]
+
+RUN mv ./entrypoint.sh /entrypoint.sh
+RUN ["chmod", "+x", "/entrypoint.sh"]
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["npm", "run", "develop:compose"]
+
+EXPOSE 8080

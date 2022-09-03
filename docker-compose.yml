@@ -1,0 +1,33 @@
+version: '3'
+services:
+  node-api:
+    image: node-api
+    container_name: node-api
+    build:
+      context: ./node-api
+      dockerfile: local.dockerfile
+    ports:
+      - 1330:8080
+    volumes:
+      - ./node-api:/usr/src
+      - node-api-node-modules:/usr/src/node_modules
+      - /usr/src/dist
+    networks:
+      - test-network
+      
+  product-db:
+    image: mongo:3.6.0
+    ports:
+      - "10080:27017"
+    volumes:
+      - dbvolume:/mdata
+    environment: { AUTH: "no" }
+    networks:
+      - test-network
+
+volumes:
+  dbvolume: {}
+
+networks:
+  test-network:
+    external: true
